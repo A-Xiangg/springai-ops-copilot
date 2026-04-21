@@ -1,0 +1,16 @@
+.DS_Store
+.idea/
+*.iml
+
+# Java
+backend/target/
+*.log
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Env
+.env
+.env.*
+!.env.example
