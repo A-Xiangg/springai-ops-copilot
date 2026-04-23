@@ -12,6 +12,12 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 对话业务服务，负责会话标识处理、模型调用和对话记录持久化。
+ *
+ * @author ops-copilot
+ * @date 2026/04/21
+ */
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -31,7 +37,6 @@ public class ChatService {
         conversation.setUserMessage(request.message());
         conversation.setAssistantAnswer(answer);
         conversationRepository.save(conversation);
-
         return new ChatResponse(sessionId, answer, Instant.now());
     }
 

@@ -5,6 +5,12 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * OpenAPI 文档配置。
+ *
+ * @author ops-copilot
+ * @date 2026/04/21
+ */
 @Configuration
 public class OpenApiConfig {
 

@@ -13,6 +13,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Web 安全配置，负责接口访问规则和跨域策略。
+ *
+ * @author ops-copilot
+ * @date 2026/04/21
+ */
 @Configuration
 public class SecurityConfig {
 
@@ -49,6 +55,12 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * 安全跨域配置属性。
+     *
+     * @author ops-copilot
+     * @date 2026/04/21
+     */
     public static class SecurityCorsProperties {
         private List<String> allowedOrigins = List.of("http://localhost:5173");
 

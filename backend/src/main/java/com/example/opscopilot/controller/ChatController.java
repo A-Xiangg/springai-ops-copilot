@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 对话接口控制器，负责接收用户消息并返回运维 Copilot 回复。
+ *
+ * @author ops-copilot
+ * @date 2026/04/21
+ */
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor

@@ -12,6 +12,12 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 运维 Copilot 对话记录实体。
+ *
+ * @author ops-copilot
+ * @date 2026/04/21
+ */
 @Getter
 @Setter
 @Entity
