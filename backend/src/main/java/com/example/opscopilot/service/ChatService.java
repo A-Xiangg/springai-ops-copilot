@@ -2,12 +2,14 @@ package com.example.opscopilot.service;
 
 import com.example.opscopilot.dto.ChatRequest;
 import com.example.opscopilot.dto.ChatResponse;
-import com.example.opscopilot.entity.Conversation;
-import com.example.opscopilot.repository.ConversationRepository;
+import com.example.opscopilot.entity.ChatMessage;
+import com.example.opscopilot.entity.ChatSession;
+import com.example.opscopilot.repository.ChatMessageRepository;
+import com.example.opscopilot.repository.ChatSessionRepository;
 import java.time.Instant;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,19 +27,26 @@ public class ChatService {
     private static final String SYSTEM_PROMPT = "你是一个面向园区/社区系统的运维 Copilot。回答要结构化、可执行，优先给出排查步骤、风险点和下一步动作。";
 
     private final ObjectProvider<ChatClient.Builder> chatClientBuilderProvider;
-    private final ConversationRepository conversationRepository;
+    private final ChatSessionRepository chatSessionRepository;
+    private final ChatMessageRepository chatMessageRepository;
+
+    @Value("${app.chat.default-user-id:1}")
+    private Long defaultUserId;
+
+    @Value("${spring.ai.openai.chat.options.model:gpt-4o-mini}")
+    private String modelName;
 
     @Transactional
     public ChatResponse chat(ChatRequest request) {
-        String sessionId = normalizeSessionId(request.sessionId());
+        ChatSession session = resolveSession(request.sessionId(), request.message());
         String answer = callModel(request.message());
 
-        Conversation conversation = new Conversation();
-        conversation.setSessionId(sessionId);
-        conversation.setUserMessage(request.message());
-        conversation.setAssistantAnswer(answer);
-        conversationRepository.save(conversation);
-        return new ChatResponse(sessionId, answer, Instant.now());
+        saveMessage(session.getId(), "user", request.message(), null);
+        saveMessage(session.getId(), "assistant", answer, modelName);
+        session.setUpdatedAt(Instant.now());
+        chatSessionRepository.save(session);
+
+        return new ChatResponse(String.valueOf(session.getId()), answer, Instant.now());
     }
 
     private String callModel(String message) {
@@ -58,10 +67,41 @@ public class ChatService {
         }
     }
 
-    private String normalizeSessionId(String sessionId) {
-        if (sessionId == null || sessionId.isBlank()) {
-            return UUID.randomUUID().toString();
+    private ChatSession resolveSession(String sessionId, String message) {
+        if (sessionId != null && !sessionId.isBlank()) {
+            try {
+                Long id = Long.valueOf(sessionId.trim());
+                return chatSessionRepository.findById(id)
+                        .orElseGet(() -> createSession(message));
+            } catch (NumberFormatException ignored) {
+                return createSession(message);
+            }
         }
-        return sessionId.trim();
+        return createSession(message);
+    }
+
+    private ChatSession createSession(String message) {
+        ChatSession session = new ChatSession();
+        session.setUserId(defaultUserId);
+        session.setTitle(buildTitle(message));
+        session.setStatus((short) 1);
+        return chatSessionRepository.save(session);
+    }
+
+    private void saveMessage(Long sessionId, String role, String content, String modelName) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSessionId(sessionId);
+        chatMessage.setRole(role);
+        chatMessage.setContent(content);
+        chatMessage.setModelName(modelName);
+        chatMessageRepository.save(chatMessage);
+    }
+
+    private String buildTitle(String message) {
+        String title = message.strip();
+        if (title.length() <= 60) {
+            return title;
+        }
+        return title.substring(0, 60);
     }
 }
