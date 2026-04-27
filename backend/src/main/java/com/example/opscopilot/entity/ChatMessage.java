@@ -10,6 +10,10 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 聊天消息实体。
+ * 按会话维度存储用户提问和助手回答，是后续实现上下文追溯和审计的基础数据。
+ */
 @Getter
 @Setter
 @Entity
@@ -36,6 +40,9 @@ public class ChatMessage {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    /**
+     * 首次持久化消息时生成主键并补齐创建时间。
+     */
     @PrePersist
     void prePersist() {
         if (id == null) {

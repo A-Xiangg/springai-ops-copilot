@@ -12,6 +12,10 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * AI 模型配置实体。
+ * 用于维护可用模型、供应商和推理参数，为后续切换模型或多模型管理提供配置基础。
+ */
 @Getter
 @Setter
 @Entity
@@ -50,6 +54,9 @@ public class AiModelConfig {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    /**
+     * 创建模型配置时初始化主键、时间和启用状态。
+     */
     @PrePersist
     void prePersist() {
         if (id == null) {
@@ -67,6 +74,9 @@ public class AiModelConfig {
         }
     }
 
+    /**
+     * 模型配置被修改时刷新更新时间。
+     */
     @PreUpdate
     void preUpdate() {
         updatedAt = Instant.now();

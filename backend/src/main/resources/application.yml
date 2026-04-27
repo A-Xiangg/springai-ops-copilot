@@ -5,9 +5,9 @@ spring:
   application:
     name: springai-ops-copilot
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ops_copilot}
-    username: ${POSTGRES_USER:ops}
-    password: ${POSTGRES_PASSWORD:ops123456}
+    url: jdbc:postgresql://121.41.82.44:54320/ops_copilot
+    username: root
+    password: MaiHua888!-pgsql
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,17 +21,11 @@ spring:
       port: ${REDIS_PORT:6379}
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY:}
+      api-key: ${OPENAI_API_KEY:sk-3ef987e1ccd84ed8a7fda2e9a23e7a91}
+      base-url: ${OPENAI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode}
       chat:
         options:
-          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
-    vectorstore:
-      pgvector:
-        initialize-schema: true
-        schema-name: public
-        table-name: vector_store
-        dimensions: 1536
-
+          model: ${OPENAI_CHAT_MODEL:qwen-plus}
 management:
   endpoints:
     web:
@@ -49,7 +43,15 @@ springdoc:
     path: /v3/api-docs
 
 app:
+  chat:
+    default-user-id: ${APP_CHAT_DEFAULT_USER_ID:1}
   security:
     allowed-origins:
       - http://localhost:5173
       - http://127.0.0.1:5173
+
+logging:
+  level:
+    root: ${ROOT_LOG_LEVEL:INFO}
+    com.example.opscopilot: ${APP_LOG_LEVEL:INFO}
+    org.springframework.ai: ${SPRING_AI_LOG_LEVEL:INFO}

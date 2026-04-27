@@ -11,6 +11,10 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 系统用户实体。
+ * 当前主要用于标识聊天会话和知识库等业务数据的归属用户。
+ */
 @Getter
 @Setter
 @Entity
@@ -38,6 +42,9 @@ public class SysUser {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    /**
+     * 首次创建用户时初始化主键、时间和默认状态。
+     */
     @PrePersist
     void prePersist() {
         if (id == null) {
@@ -55,6 +62,9 @@ public class SysUser {
         }
     }
 
+    /**
+     * 用户信息更新时刷新最后修改时间。
+     */
     @PreUpdate
     void preUpdate() {
         updatedAt = Instant.now();

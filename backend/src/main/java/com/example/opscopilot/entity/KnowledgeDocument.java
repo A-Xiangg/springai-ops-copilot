@@ -11,6 +11,10 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 知识文档实体。
+ * 记录知识库中文档的文件信息、导入状态和切片数量，作为后续向量化处理的元数据来源。
+ */
 @Getter
 @Setter
 @Entity
@@ -47,6 +51,9 @@ public class KnowledgeDocument {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    /**
+     * 文档首次入库时初始化标识、时间和默认切片数量。
+     */
     @PrePersist
     void prePersist() {
         if (id == null) {
@@ -64,6 +71,9 @@ public class KnowledgeDocument {
         }
     }
 
+    /**
+     * 文档元数据变化时同步刷新更新时间。
+     */
     @PreUpdate
     void preUpdate() {
         updatedAt = Instant.now();

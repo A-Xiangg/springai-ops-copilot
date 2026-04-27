@@ -11,6 +11,10 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 知识库实体。
+ * 表示一个独立的知识集合，用于组织文档、权限归属以及启停状态。
+ */
 @Getter
 @Setter
 @Entity
@@ -37,6 +41,9 @@ public class KnowledgeBase {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    /**
+     * 创建知识库时补齐主键、时间和默认状态。
+     */
     @PrePersist
     void prePersist() {
         if (id == null) {
@@ -54,6 +61,9 @@ public class KnowledgeBase {
         }
     }
 
+    /**
+     * 知识库元数据更新时刷新修改时间。
+     */
     @PreUpdate
     void preUpdate() {
         updatedAt = Instant.now();
