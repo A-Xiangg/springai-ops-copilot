@@ -5,9 +5,9 @@ spring:
   application:
     name: springai-ops-copilot
   datasource:
-    url: jdbc:postgresql://121.41.82.44:54320/ops_copilot
-    username: root
-    password: MaiHua888!-pgsql
+    url: jdbc:
+    username: 
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,7 +21,7 @@ spring:
       port: ${REDIS_PORT:6379}
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY:sk-3ef987e1ccd84ed8a7fda2e9a23e7a91}
+      api-key: 
       base-url: ${OPENAI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode}
       chat:
         options:
